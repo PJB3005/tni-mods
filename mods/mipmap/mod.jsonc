@@ -1,0 +1,19 @@
+{
+	"id": "systems.slugcat.experiments",
+	"name": "Mipmap mod",
+	"authors": [ "PJB" ],
+	"version": "0.4.20",
+	"description": [
+        "Makes most textures in the game use mipmaps and smooth interpolation, removing all the aliasing artifacts when the camera isn't still."
+	],
+	"links": {
+		"github": "https://github.com/PJB3005/tni-mods"
+	},
+	"dependencies": {
+		"tower-networking-inc": "^0.13.4"
+	},
+	"dependencies_optional": {
+	},
+	"incompatibilities": {
+	}
+}

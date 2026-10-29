@@ -1,0 +1,15 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "image",
+    srcs = [
+        "mipmap_gen.cpp",
+        "mipmap_gen.hpp",
+        "srgb.hpp",
+    ],
+    copts = [
+        "-std=c++23",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["//src/stb:stb_image_resize"],
+)

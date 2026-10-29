@@ -1,0 +1,12 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name="sandbox_api",
+    srcs=glob(["program/cpp/docker/api/*.cpp"]),
+    includes=["program/cpp/docker/api/"],
+    hdrs=glob(["program/cpp/docker/api/*.hpp", "program/cpp/docker/api/*.h"]),
+    copts=[
+        "-std=c++23"
+    ],
+    visibility = ["//visibility:public"]
+)

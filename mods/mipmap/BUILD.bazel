@@ -1,0 +1,7 @@
+load("//tni-bazel:tni_mod.bzl", "tni_mod")
+
+tni_mod(
+    name = "mipmap",
+    json = ":mod.jsonc",
+    program = "//programs/mipmap",
+)

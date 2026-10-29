@@ -1,0 +1,22 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
+cc_binary(
+    name = "mipmap",
+    srcs = [
+        "entry.cpp",
+    ],
+    copts = [
+        "-std=c++23",
+    ],
+    linkopts = [
+        "-Wl,--wrap=memcpy,--wrap=memset,--wrap=memcmp,--wrap=memmove",
+        "-Wl,--wrap=strlen,--wrap=strcmp,--wrap=strncmp",
+        "-Wl,--wrap=malloc,--wrap=calloc,--wrap=realloc,--wrap=free",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/image",
+        "//tni-bazel:tower_api",
+        "@godot-sandbox//:sandbox_api",
+    ],
+)

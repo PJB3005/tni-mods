@@ -1,0 +1,37 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "stb_image",
+    srcs = [
+        ":image.c",
+    ],
+    copts = [
+        "-fno-strict-aliasing",  # According to STB's comments, it's "probably" not safe to have strict aliasing.
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["@stb//:stb_headers"],
+)
+
+cc_library(
+    name = "stb_image_write",
+    srcs = [
+        ":image_write.c",
+    ],
+    copts = [
+        "-fno-strict-aliasing",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["@stb//:stb_headers"],
+)
+
+cc_library(
+    name = "stb_image_resize",
+    srcs = [
+        ":image_resize.c",
+    ],
+    copts = [
+        "-fno-strict-aliasing",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["@stb_image_resize//:stb_headers"],
+)

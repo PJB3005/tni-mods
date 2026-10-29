@@ -1,0 +1,14 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
+cc_binary(
+    name = "mipmap_gen",
+    srcs = [":mipmap_gen.cpp"],
+    copts = [
+        "-std=c++23",
+    ],
+    deps = [
+        "//src/image",
+        "//src/stb:stb_image",
+        "//src/stb:stb_image_write",
+    ],
+)
