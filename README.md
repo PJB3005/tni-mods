@@ -1,150 +1,23 @@
-# Tower Networking Inc. Modding Kit
+# PJB's TNI mods
 
-This repository is a modding kit that can be used to create mods for the game [Tower Networking Inc](https://store.steampowered.com/app/2939600/Tower_Networking_Inc/). Modding support for the game is implemented with [Godot Sandbox](https://github.com/libriscv/godot-sandbox) using [libriscv](https://libriscv.no/).
+Here's my mods for [Tower Networking Inc](https://store.steampowered.com/app/2939600/Tower_Networking_Inc/). See the [upstream repo](https://github.com/treefarmer741/Tower-Networking-Inc-modding-kit) for some details, though note that I use a custom build system.
 
-Mods are created in C/C++, however this repository also contains the official LuaJIT support mod. Lua mods are preferred as they are easier to develop and are naturally source-available.
+## Bazel build
 
-Note that modding for the game is still in early design/implementation stage, and any feedback/suggestions is encouraged to make modding the game fun!
-
-## Using Lua based mods
-
-If you want to use a Lua based mods, you will need to manually add the `luajit-support` mod first. This process will be improved in the future.
-
-You can find the mod in the github releases, or [click here](https://github.com/treefarmer741/Tower-Networking-Inc-modding-kit/releases/tag/continuous-gnu-main) for the latest stable release. Download the luajit file and place it in your mods folder. Refer to [Loading the mod](#loading-the-mod) for further instructions.
-
-If you are using the `beta` branch of the game, you'll likely want to use the ["Continuous (gnu) - beta"](https://github.com/treefarmer741/Tower-Networking-Inc-modding-kit/releases/tag/continuous-gnu-beta) release instead.
-
-## Beta branch
-
-There is a `beta` github branch which should work with the game's `beta` branch on steam.
-
-Changes to the modding-kit go through the beta branch first.
-
-## Example mods
-
-Examples are your friend. To get started, take a look at the following examples:
-
-### 2x BW switches (Lua)
-
-The [2x BW switches](/mods/2x-bandwidth-switches/) mod doubles the bandwidth of every switch when spawned in. The store display the original value!
-
-### C++ Template mod (C/C++)
-
-The [Template mod](/programs/cpp-template/) is a template that contains the common use scenario for writing a mod in c/c++.
-
-### LuaJIT support mod (C/C++)
-
-The [LuaJIT support mod](/programs/luajit-support/) adds Lua based mods. It is much more complex but may help with things the template doesn't have.
-
-### LuaJIT support mod (C/C++)
-
-The [LuaJIT support mod](/programs/luajit) adds Lua based mods. It is much more complex but may help with things the template doesn't have.
-
----
-
-## Loading the mod
-
-TNI will search for mods in the following locations;
-
-- Windows: `%APPDATA%\Godot\app_userdata\Tower Networking Inc\mods`
-- Linux: `~/.local/share/godot/app_userdata/Tower Networking Inc/mods`
-
-You should have the following structure after placing the mod in the correct folder (replacing `cpp-template` with the given mod);
-
-`.../Tower Networking Inc/mods/cpp-template/mod.jsonc`
-
-If you are using a Lua based mod, please see the instructions at [Using Lua based mods](#using-lua-based-mods)
-
----
-
-## Building C/C++ mods
-
-Check out the [librisc-v docs](https://libriscv.no/docs/host_langs/godot_integration/godot_docs/cmake#cmake-setup) for more information.
-
-To clone and initialize the repository locally;
-
-```sh
-# Ensure you have `git` installed.
-git clone https://github.com/treefarmer741/Tower-Networking-Inc-modding-kit.git --branch main
-git submodule update --init --recursive
-```
-
-Replace `--branch main` with `--branch beta` if you are playing on the beta branch of the game.
-
-### Windows
-
-Make sure the following is installed:
-
-1. [git](https://git-scm.com/install/windows) (version control system, used to clone the repo locally)
-2. [CMake](https://cmake.org/download/) (generator for build systems)
-3. [Ninja](https://ninja-build.org/) (build system)
-4. [ZIG](https://ziglang.org/download/) (RISC-V cross-compilation)
-
-Then in the root of this project, run the command:
+This repo uses [Bazel](https://bazel.build/) to build. Install it, and then building is as simple as:
 
 ```
-zig.cmd
+bazel build //mods/...
 ```
 
-### Linux (and WSL2)
+Or to build a single mod (without packaging `.zip`):
 
-Make sure the following is installed:
 
-1. `git` (version control system, used to clone the repo locally)
-2. `CMake` (generator for build systems)
-3. `Ninja` (build system)
-4. `g++-riscv64-linux-gnu-14` (GNU RISC-V compiler)
-
-```sh
-# For Debian based systems like Ubuntu;
-sudo apt install git cmake ninja-build g++-riscv64-linux-gnu-14
+```
+bazel build //mods/mipmap
 ```
 
-Then in the root of this project, run the command:
+> [!WARNING]
+> Windows users may need to run [these instructions](https://bazel.build/configure/windows) as well. I've already done that, so idk if the repo builds otherwise.
 
-```sh
-./build.cmd
-```
-
-#
-
-The built output (a .elf file) will be in the `./mods/<id-of-the-mod>/entry.elf` directory.
-
-There also exists `copy-mods.cmd` (Windows) and `copy-mods.sh` (Linux & WSL) to copy the mods in `./mods/` to the games `mods/` directory.
-
----
-
-## Creating your own C++ mod
-
-*See below this section for Lua mods.*
-
-- Start by copying the [`./mods/cpp-template`](./mods/cpp-template/) and [`./programs/cpp-template`](./programs/cpp-template/) and rename both folders to your new mod-id.
-- Edit `./mods/my_mod_id/mod.jsonc` and update all the information (especially the `"id"` section!)
-- Edit [`./programs/CMakeLists.txt`](./programs/CMakeLists.txt) and add `add_subdirectory(my_mod_id)` to the bottom.
-- Edit `./programs/my_mod_id/CMakeLists.txt` and change both occurrences of `cpp-template` to match your mod-id and folder name.
-- Finally, [build it!](#building-cc-mods)
-- If the build was successful, you should have `./mods/my_mod_id/entry.elf`
-- Copy the folder either by using `copy-mods.cmd`/`copy-mods.sh` or doing so manually.
-- Use the in-game Mod Manager to enable your new mod and reload.
-- You should see a popup "Hello from a C++ tni mod!"
-- From here, you can edit `./programs/my_mod_id/entry.cpp` to make your mod do something new!
-
----
-
-## Creating your own Lua mod
-
-- Start by copying [`./mods/2x-bandwidth-switches`](./mods/2x-bandwidth-switches/) into your games mods directory and renaming it to what will be your new mod-id.
-- If you use any of Sumneko's Lua extensions, copy [`./lua-typing/`](./lua-typing/) into the games mods directory as well (it's not a mod)
-- Edit `mods/my_mod_id/mod.jsonc` and update all the information (especially the `"id"` section!)
-- Use the in-game Mod Manager to enable your new mod and reload.
-- When viewing the log, you should see "High BW capacity switches!" when the mod loads. When in-game, all switches should have 2x the bandwidth!
-- From here, you can edit `mods/my_mod_id/entry.lua` to make your mod do something new!
-
----
-
-## Modding tips
-
-- It can be very helpful to launch the game via a console window. This allows to view the log output live! Otherwise you'll need to monitor `logs/godot.log` in a text editor.
-- For Lua mods, use one of [Sumneko's Lua extensions](https://github.com/LuaLS/lua-language-server) to get rich integration with your editor, allowing for error checking and auto-complete and more. (we provide the typing info in [`./lua-typing/`](./lua-typing/))
-- C++/Sandbox exceptions provide a cryptic location to the error, the following (on Linux/WSL) can convert to real source location;
-  `riscv64-unknown-elf-addr2line -e mods/luajit-support/entry.elf -f -p -i $(python3 -c 'print(hex(0x00000000000195D6 + 0x0b8))')`
+The produced mod directories (ready for copying or symlinking to the game folder) will be in `bazel-bin/mods/`.
